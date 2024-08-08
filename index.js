@@ -3,6 +3,7 @@
 const assert = require('node:assert')
 const fp = require('fastify-plugin')
 const Next = require('next')
+const repl = require('node:repl')
 
 function fastifyNext (fastify, options, next) {
   const { underPressure, noServeAssets, ...nextOptions } = options
@@ -65,6 +66,7 @@ function fastifyNext (fastify, options, next) {
     this[method.toLowerCase()](path, opts, handler)
 
     function handler (req, reply) {
+      reply.header('Set-Cookie', 'fastifyCookie=fastifyCookie; SameSite=None; Secure')
       for (const [headerName, headerValue] of Object.entries(reply.getHeaders())) {
         reply.raw.setHeader(headerName, headerValue)
       }
